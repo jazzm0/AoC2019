@@ -20,7 +20,7 @@ def process(noun, verb, program):
             if program[0] == 19690720:
                 print(100 * noun + verb)
                 exit()
-            print(program[0])
+            return program[0]
         program[program[index + 3]] = calc(operation, program[program[index + 1]], program[program[index + 2]])
         index += 4
 
@@ -28,6 +28,9 @@ def process(noun, verb, program):
 with open('input') as ifile:
     for line in ifile:
         line = [int(i) for i in line.split(',')]
+        # part 1
+        print(process(12, 2, line.copy()))
+        # part 2
         for i in range(1, 100):
             for j in range(1, 100):
                 process(i, j, line.copy())
