@@ -1,4 +1,5 @@
-import collections, sys
+import collections
+import sys
 
 grid = []
 
