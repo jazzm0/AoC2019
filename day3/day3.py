@@ -1,4 +1,4 @@
-import collections
+import collections, sys
 
 grid = []
 
@@ -28,19 +28,19 @@ with open('input') as ifile:
             while amount > 0:
                 if direction is 'U':
                     y -= 1
-                if direction is 'D':
+                elif direction is 'D':
                     y += 1
-                if direction is 'L':
+                elif direction is 'L':
                     x -= 1
-                if direction is 'R':
+                elif direction is 'R':
                     x += 1
 
                 path[(x, y)] = (x, y)
                 amount -= 1
         grid.append(path)
 
-min_dist = 100000000
-min_steps = 100000000
+min_dist = sys.maxsize
+min_steps = sys.maxsize
 origo = (0, 0)
 
 for i in grid[0]:
