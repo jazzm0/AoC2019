@@ -5,35 +5,30 @@ count_one = 0
 count_two = 0
 
 
-def part_one(n):
-    contains = False
-    c = str(n)
-    for i in range(len(c) - 1):
-        if not contains and c[i] == c[i + 1]:
-            contains = True
-        if c[i] > c[i + 1]:
-            return False
-    return contains
-
-
-def part_two(n):
+def check(n):
     c = str(n)
     b = {}
+    one, two = 0, 0
     for i in range(len(c) - 1):
         if c[i] == c[i + 1]:
             b[c[i]] = b.get(c[i], 1) + 1
+        if c[i] > c[i + 1]:
+            return one, two
 
     for j in b.values():
         if j == 2:
-            return True
-    return False
+            one += 1
+            break
+
+    if len(b) > 0:
+        two += 1
+    return one, two
 
 
 for a in range(f, t):
-    if part_one(a):
-        count_one += 1
-        if part_two(a):
-            count_two += 1
+    o, t = check(a)
+    count_one += o
+    count_two += t
 
 print(count_one)
 print(count_two)
