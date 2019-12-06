@@ -13,6 +13,9 @@ def convert(instruction):
         r.append(instruction[i])
     while len(r) < 5:
         r.insert(0, '0')
+    tmp = r[0]
+    r[0] = r[2]
+    r[2] = tmp
     return str(''.join(r))
 
 
@@ -73,9 +76,9 @@ def process():
         for i in range(args):
             ip += 1
             index = program[ip]
-            if instruction[2 - i] == position_mode:
+            if instruction[i] == position_mode:
                 value = program[index]
-            elif instruction[2 - i] == immediate_mode:
+            elif instruction[i] == immediate_mode:
                 value = index
             else:
                 print('error')
