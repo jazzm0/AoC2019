@@ -87,7 +87,7 @@ def convert(instruction):
 
 def process(program):
     ip = 0
-    arg_values = [0, 0, 0]
+
     while True:
         instruction = convert(program[ip])
 
@@ -96,12 +96,13 @@ def process(program):
         if op_code == 99:
             break
 
-        for i in range(len(arg_values)):
+        arg_values = []
+        for i in range(3):
             index = ip + i + 1
             if instruction[i] == position_mode:
-                arg_values[i] = program[index]
+                arg_values.append(program[index])
             elif instruction[i] == immediate_mode:
-                arg_values[i] = index
+                arg_values.append(index)
             else:
                 print('mode error')
 
