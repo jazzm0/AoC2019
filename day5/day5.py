@@ -1,9 +1,75 @@
-from operator import add, mul
-
 position_mode = '0'
 immediate_mode = '1'
 
 program_input = 5
+
+
+def add(program, arg_values, ip, ip_increment):
+    program[arg_values[2]] = program[arg_values[0]] + program[arg_values[1]]
+    ip += ip_increment
+    return ip
+
+
+def mul(program, arg_values, ip, ip_increment):
+    program[arg_values[2]] = program[arg_values[0]] * program[arg_values[1]]
+    ip += ip_increment
+    return ip
+
+
+def push(program, arg_values, ip, ip_increment):
+    program[arg_values[0]] = program_input
+    ip += ip_increment
+    return ip
+
+
+def pop(program, arg_values, ip, ip_increment):
+    print(program[arg_values[0]])
+    ip += ip_increment
+    return ip
+
+
+def jnz(program, arg_values, ip, ip_increment):
+    if program[arg_values[0]] != 0:
+        ip = program[arg_values[1]]
+    else:
+        ip += ip_increment
+    return ip
+
+
+def jz(program, arg_values, ip, ip_increment):
+    if program[arg_values[0]] == 0:
+        ip = program[arg_values[1]]
+    else:
+        ip += ip_increment
+    return ip
+
+
+def lt(program, arg_values, ip, ip_increment):
+    if program[arg_values[0]] < program[arg_values[1]]:
+        program[arg_values[2]] = 1
+    else:
+        program[arg_values[2]] = 0
+    ip += ip_increment
+    return ip
+
+
+def eq(program, arg_values, ip, ip_increment):
+    if program[arg_values[0]] == program[arg_values[1]]:
+        program[arg_values[2]] = 1
+    else:
+        program[arg_values[2]] = 0
+    ip += ip_increment
+    return ip
+
+
+oc = {1: (add, 4),
+      2: (mul, 4),
+      3: (push, 2),
+      4: (pop, 2),
+      5: (jnz, 3),
+      6: (jz, 3),
+      7: (lt, 4),
+      8: (eq, 4)}
 
 
 def convert(instruction):
@@ -19,86 +85,30 @@ def convert(instruction):
     return str(''.join(r))
 
 
-def push():
-    return program_input
-
-
-def pop(value):
-    print(value)
-
-
-def jnz(cond, value):
-    if cond != 0:
-        return value
-
-
-def jz(cond, value):
-    if cond == 0:
-        return value
-
-
-def lt(a, b, pos):
-    if a < b:
-        program[pos] = 1
-    else:
-        program[pos] = 0
-
-
-def eq(a, b, pos):
-    if a == b:
-        program[pos] = 1
-    else:
-        program[pos] = 0
-
-
-def halt():
-    exit()
-
-
-oc = {1: (add, 2, True), 2: (mul, 2, True), 3: (push, 0, True), 4: (pop, 1, False), 5: (jnz, 2, True),
-      6: (jz, 2, True), 7: (lt, 3, False), 8: (eq, 3, False), 99: (halt, 0, False)}
-
-ip_modifiers = {5, 6}
-
-
-def process():
+def process(program):
     ip = 0
+    arg_values = [0, 0, 0]
     while True:
         instruction = convert(program[ip])
+
         op_code = int(instruction[-2:])
-        op = oc[op_code][0]
 
         if op_code == 99:
-            op()
+            break
 
-        arg_values = []
-        args = oc[op_code][1]
-        for i in range(args):
-            ip += 1
-            index = program[ip]
+        for i in range(len(arg_values)):
+            index = ip + i + 1
             if instruction[i] == position_mode:
-                value = program[index]
+                arg_values[i] = program[index]
             elif instruction[i] == immediate_mode:
-                value = index
+                arg_values[i] = index
             else:
-                print('error')
+                print('mode error')
 
-            arg_values.append(value)
-
-        ip += 1
-        if oc[op_code][2]:
-            ret_value = op(*arg_values)
-            if op_code in ip_modifiers:
-                if ret_value is not None:
-                    ip = ret_value
-            else:
-                program[program[ip]] = ret_value
-                ip += 1
-        else:
-            op(*arg_values)
+        ip = oc[op_code][0](program, arg_values, ip, oc[op_code][1])
 
 
 with open('input') as ifile:
     for line in ifile:
         program = [int(x) for x in line.split(',')]
-        process()
+        process(program)
