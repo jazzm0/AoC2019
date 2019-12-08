@@ -12,6 +12,12 @@ zero_count = sys.maxsize
 zero_count_index = -1
 
 
+def get_first_nt_pixel(layers, x, y):
+    for l in range(len(layers)):
+        if layers[l][x][y] != 2:
+            return layers[l][x][y]
+
+
 def count_digits(lay, digit):
     count = 0
     for ll in lay:
@@ -48,3 +54,25 @@ for digit in pixels:
 target_layer = layers[zero_count_index]
 
 print(count_digits(target_layer, 1) * count_digits(target_layer, 2))
+print('\n\n\n')
+target_layer = []
+for lay in range(len(layers)):
+    for x in range(t):
+        target_layer_line = []
+        for y in range(w):
+            pixel = get_first_nt_pixel(layers, x, y)
+            target_layer_line.append(pixel)
+        target_layer.append(target_layer_line)
+count = 0
+for lay in range(len(target_layer)):
+    s = ''
+    for i in range(len(target_layer[lay])):
+        if target_layer[lay][i] == 0:
+            s = s + ' '
+        else:
+            s = s + 'O'
+
+    print(s)
+    count += 1
+    if count == t:
+        break
