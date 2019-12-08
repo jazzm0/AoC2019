@@ -35,8 +35,6 @@ print(sum(d.values()))
 path_a = e['SAN']
 path_b = e['YOU']
 
-path_a.remove('COM')
 path_a.remove('SAN')
-path_b.remove('COM')
 path_b.remove('YOU')
 print(len(path_a.difference(path_b)) + len(path_b.difference(path_a)))
