@@ -88,33 +88,22 @@ class Machine:
 
     @staticmethod
     def convert(instruction):
-        instruction = str(instruction)
-        r = []
-        for i in range(len(instruction)):
-            r.append(instruction[i])
-        while len(r) < 5:
-            r.insert(0, '0')
-        tmp = r[0]
-        r[0] = r[2]
-        r[2] = tmp
-        return str(''.join(r))
+        return instruction % 100, [(instruction % 1000) // 100, (instruction % 10000) // 1000, instruction // 10000]
 
     def add_input(self, inp):
         self.program_input.append(inp)
 
     def process(self):
         while True:
-            instruction = self.convert(program[self.ip])
-
-            op_code = int(instruction[-2:])
+            op_code, modes = self.convert(self.program[self.ip])
 
             if op_code == 99:
                 break
 
             arg_values = []
-            for i in range(3):
+            for i in range(len(modes)):
                 index = self.ip + i + 1
-                arg_values.append((int(instruction[i]), program[index]))
+                arg_values.append((modes[i], self.program[index]))
 
             self.oc[op_code][0](self, arg_values, self.oc[op_code][1])
 
