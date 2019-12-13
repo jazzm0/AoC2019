@@ -1,8 +1,8 @@
-asteroids = set()
+from sympy import Point, Line
 
-maxX = 0
-maxY = 0
-points_checked = set()
+asteroids = set()
+X = 0
+Y = 0
 
 
 def add(a, b):
@@ -11,7 +11,7 @@ def add(a, b):
 
 def remove(v, vector, a):
     target = add(v, vector)
-    while 0 <= target[0] <= maxX and 0 <= target[1] <= maxY:
+    while 0 <= target[0] <= X and 0 <= target[1] <= Y:
         if target in a:
             a.remove(target)
         target = add(target, vector)
@@ -19,32 +19,27 @@ def remove(v, vector, a):
 
 
 def visible(point, a):
-    for dist in range(max(maxX, maxY)):
-        for x_temp in range(point[0] - dist, point[0] + dist):
-            for y_temp in range(point[1] - dist, point[1] + dist):
-                v = (x_temp, y_temp)
-                if v not in points_checked:
-                    points_checked.add(v)
-                    if v in a and v != point:
-                        a = remove(v, (v[0] - point[0], v[1] - point[1]), a)
+    a.remove(point)
+    b = a.copy()
+    for t in b:
+        a = remove(t, (t[0] - point[0], t[1] - point[1]), a)
     return len(a)
 
 
-with open('input') as ifile:
+with open('basic') as ifile:
     y = 0
     for line in ifile:
         for x in range(len(line[:-1])):
-            maxX = max(x, maxX)
-            maxY = max(y, maxY)
+            X = x
             if line[x] == '#':
-                asteroids.add((x, y))
+                asteroids.add(Point(x, y))
+        Y = y
         y += 1
 
-maxCount = 0
-maxCoord = ()
 
 for p in asteroids:
     v = visible(p, asteroids.copy())
+    print(p, v)
     if v > maxCount:
         maxCount = v
         maxCoord = p
