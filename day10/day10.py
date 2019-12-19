@@ -2,8 +2,6 @@ from sympy import Point
 import numpy as np
 
 asteroids = set()
-X = 0
-Y = 0
 
 
 def normalize(vector):
@@ -28,7 +26,7 @@ def collect(point, a):
     return visible
 
 
-with open('d ') as ifile:
+with open('input') as ifile:
     y = 0
     for line in ifile:
         for x in range(len(line[:-1])):
@@ -42,9 +40,11 @@ maxCount = 0
 
 for p in asteroids:
     v = collect(p, asteroids.copy())
-    print(p, v)
+    # print(p, v)
     if v > maxCount:
         maxCount = v
         maxCoord = p
 print('\n\n\n\n')
 print(maxCoord, maxCount)
+
+# Point2D(22, 28) 326
