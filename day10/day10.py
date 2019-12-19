@@ -1,3 +1,4 @@
+from numpy.linalg import norm
 from sympy import Point
 import numpy as np
 import math
@@ -90,10 +91,7 @@ target = Point(22, 0)
 #         break
 #     target = next_target
 
-
-import numpy as np
-
 p1 = np.array([0, 0])
 p2 = np.array([10, 10])
 p3 = np.array([1, 1])
-d = np.cross(p2 - p1, p3 - p1) / np.linalg.norm(p2 - p1)
+d = np.cross(p2 - p1, p3 - p1) / norm(p2 - p1)
