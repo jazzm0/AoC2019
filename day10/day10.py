@@ -1,32 +1,34 @@
-from sympy import Point, Line
+from sympy import Point
+import numpy as np
 
 asteroids = set()
 X = 0
 Y = 0
 
 
-def add(a, b):
-    return a[0] + b[0], a[1] + b[1]
+def normalize(vector):
+    return Point(np.sign(vector[0]), np.sign(vector[1]))
 
 
-def remove(v, vector, a):
-    target = add(v, vector)
-    while 0 <= target[0] <= X and 0 <= target[1] <= Y:
-        if target in a:
-            a.remove(target)
-        target = add(target, vector)
-    return a
+def count(center, neighbour, points, checked):
+    normalized = set()
+    for point in points:
+        if point not in checked and Point.is_collinear(center, neighbour, point):
+            checked.add(point)
+            normalized.add(normalize(Point(center[0] - point[0], center[1] - point[1])))
+    return len(normalized)
 
 
-def visible(point, a):
+def collect(point, a):
     a.remove(point)
-    b = a.copy()
-    for t in b:
-        a = remove(t, (t[0] - point[0], t[1] - point[1]), a)
-    return len(a)
+    checked = set()
+    visible = 0
+    for i in a:
+        visible += count(point, i, a, checked)
+    return visible
 
 
-with open('basic') as ifile:
+with open('d ') as ifile:
     y = 0
     for line in ifile:
         for x in range(len(line[:-1])):
@@ -36,12 +38,13 @@ with open('basic') as ifile:
         Y = y
         y += 1
 
+maxCount = 0
 
 for p in asteroids:
-    v = visible(p, asteroids.copy())
+    v = collect(p, asteroids.copy())
     print(p, v)
     if v > maxCount:
         maxCount = v
         maxCoord = p
-
+print('\n\n\n\n')
 print(maxCoord, maxCount)
