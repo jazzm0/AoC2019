@@ -9,6 +9,10 @@ def normalize(vector):
     return Point(np.sign(vector[0]), np.sign(vector[1]))
 
 
+def distance(a, b, c):
+    return a
+
+
 def distance(a, b):
     return math.sqrt(((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2))
 
@@ -32,8 +36,15 @@ def shoot(center, target, points):
             if actual_distance < actual_target_distance:
                 actual_target_distance = actual_distance
                 actual_target = point
-    # TODO add point to shots, remove from asteroids, calculate next target
-    return actual_target
+    # TODO calculate next target
+    next_target_distance = 100
+    next_target = None
+    for point in points:
+        possible_next_distance = distance(center, actual_target, point)
+        if possible_next_distance < next_target_distance:
+            next_target_distance = possible_next_distance
+            next_target = point
+    return actual_target, next_target
 
 
 def collect(point, a):
@@ -69,10 +80,20 @@ maxCount = 0
 # Point2D(22, 28) 326
 center = Point(22, 28)
 target = Point(22, 0)
-asteroids.remove(center)
-shots = []
-for p in asteroids.copy():
-    shot = shoot(center, target, asteroids)
-    shots.append(shot)
-    asteroids.remove(shot)
-    target = shot
+# asteroids.remove(center)
+# shots = []
+# for p in asteroids.copy():
+#     shot, next_target = shoot(center, target, asteroids)
+#     shots.append(shot)
+#     asteroids.remove(shot)
+#     if len(shots) == 200:
+#         break
+#     target = next_target
+
+
+import numpy as np
+
+p1 = np.array([0, 0])
+p2 = np.array([10, 10])
+p3 = np.array([1, 1])
+d = np.cross(p2 - p1, p3 - p1) / np.linalg.norm(p2 - p1)
