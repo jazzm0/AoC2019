@@ -10,8 +10,13 @@ def normalize(vector):
     return Point(np.sign(vector[0]), np.sign(vector[1]))
 
 
-def distance(a, b, c):
-    return a
+def distance_from_line(a, b, c):
+    coeff_a = b[1] - a[1]
+    coeff_b = b[0] - a[0]
+
+    return np.sign(coeff_b * (c[1] - a[1]) - coeff_a * (c[0] - a[0])) * math.fabs(
+        coeff_a * c[0] - coeff_b * c[1] + b[0] * a[1] - b[1] * a[1]) / math.sqrt(
+        coeff_a ** 2 + coeff_b ** 2)
 
 
 def distance(a, b):
@@ -41,8 +46,8 @@ def shoot(center, target, points):
     next_target_distance = 100
     next_target = None
     for point in points:
-        possible_next_distance = distance(center, actual_target, point)
-        if possible_next_distance < next_target_distance:
+        possible_next_distance = distance_from_line(center, target, point)
+        if 0 < possible_next_distance < next_target_distance:
             next_target_distance = possible_next_distance
             next_target = point
     return actual_target, next_target
@@ -57,7 +62,7 @@ def collect(point, a):
     return visible
 
 
-with open('input') as ifile:
+with open('e') as ifile:
     y = 0
     for line in ifile:
         for x in range(len(line[:-1])):
@@ -79,19 +84,24 @@ maxCount = 0
 # print(maxCoord, maxCount)
 
 # Point2D(22, 28) 326
-center = Point(22, 28)
-target = Point(22, 0)
-# asteroids.remove(center)
-# shots = []
-# for p in asteroids.copy():
-#     shot, next_target = shoot(center, target, asteroids)
-#     shots.append(shot)
-#     asteroids.remove(shot)
-#     if len(shots) == 200:
-#         break
-#     target = next_target
+# center = Point(22, 28)
+# target = Point(22, 0)
+center = Point(8, 3)
+target = Point(center[0], 0)
+asteroids.remove(center)
+shots = []
+for p in asteroids.copy():
+    shot, next_target = shoot(center, target, asteroids)
+    shots.append(shot)
+    asteroids.remove(shot)
+    if len(shots) == 200:
+        break
+    target = next_target
 
-p1 = np.array([0, 0])
-p2 = np.array([10, 10])
-p3 = np.array([1, 1])
-d = np.cross(p2 - p1, p3 - p1) / norm(p2 - p1)
+# p1 = np.array([0, 0])
+# p2 = np.array([10, 10])
+# p3 = np.array([0, 10])
+# d = np.cross(p2 - p1, p3 - p1) / norm(p2 - p1)
+#
+# p = distance_from_line((0, 0), (10, -10), (-10, 10))
+# print(p)
